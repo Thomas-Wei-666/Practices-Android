@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">SigInActivity</string>
+    <string name="usr_name">User\'s name</string>
+    <string name="password">Password</string>
+    <string name="Signin">Sign in</string>
+    <string name="remember_password">记住密码</string>
+</resources>
