@@ -37,7 +37,8 @@ public class MainActivity extends AppCompatActivity {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
         Notification notification = new NotificationCompat.Builder(context, "001").setContentTitle("Congratulations").
                 setContentText("you have successfully send a notification!").setContentIntent(pendingIntent).setSmallIcon(R.mipmap.ic_launcher)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher)).setAutoCancel(true).setChannelId("001").build();//必须设置channel id不然不显示
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher)).setAutoCancel(true).setChannelId("001").
+                        setStyle(new NotificationCompat.BigPictureStyle().bigPicture(BitmapFactory.decodeResource(getResources(),R.drawable.img5))).build();//必须设置channel id不然不显示
         manager.notify(1, notification);
     }
 }
