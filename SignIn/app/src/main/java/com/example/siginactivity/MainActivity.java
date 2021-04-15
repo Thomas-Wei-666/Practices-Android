@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         cbRememberPassword = (CheckBox) findViewById(R.id.cb_rm_password);
         btSignIn = (Button) findViewById(R.id.bt_sign_in);
 
-        preferences = getSharedPreferences("myfile",MODE_PRIVATE);
+        preferences = getSharedPreferences("myfile", MODE_PRIVATE);
         boolean isRemembered = preferences.getBoolean("rememberPassword", false);
         if (isRemembered) {
             restorePassword();
@@ -55,11 +55,10 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 AlertDialog.Builder dialog = new AlertDialog.Builder(MainActivity.this);
                 dialog.setCancelable(false);
-                dialog.setPositiveButton("OK", ((dialog1, which) -> {
-                    etPassword.setText("");
-                }));
+                dialog.setPositiveButton("OK", ((dialog1, which) -> etPassword.setText("")));
                 dialog.setTitle("提示");
                 dialog.setMessage("用户名或密码错误");
+                dialog.show();
             }
         });
     }
@@ -74,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
         editor.putString("Password", myPassword);
         editor.putString("usrName", id);
-        editor.putBoolean("rememberPassword",true);
+        editor.putBoolean("rememberPassword", true);
         editor.apply();
 
 
