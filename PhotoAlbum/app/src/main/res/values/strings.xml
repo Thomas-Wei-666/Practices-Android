@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">PhotoAlbumActivity</string>
+    <string name="app_name">相册</string>
     <string name="menu_import">导入图片</string>
 </resources>

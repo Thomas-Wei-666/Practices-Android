@@ -1,21 +1,26 @@
 package com.example.photoalbumactivity;
 
+import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 public class PhotoRvAdapter extends RecyclerView.Adapter<PhotoRvAdapter.PhotoViewHolder> {
-    private List<DataTest> dataTests = new ArrayList<DataTest>();
+    private List<PhotoData> photoDatas;
+    private Context context;
 
-    public PhotoRvAdapter(List<DataTest> dataTests) {
-        this.dataTests = dataTests;
+    public PhotoRvAdapter(List<PhotoData> photoPaths) {
+        this.photoDatas = photoPaths;
     }
 
     @NonNull
@@ -24,26 +29,28 @@ public class PhotoRvAdapter extends RecyclerView.Adapter<PhotoRvAdapter.PhotoVie
         View view;
         view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rv_photo_item, parent, false);
         PhotoViewHolder holder = new PhotoViewHolder(view);
+        context = parent.getContext();
         return holder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull PhotoViewHolder holder, int position) {
-        DataTest dataTest = dataTests.get(position);
-        holder.textView.setText(dataTest.getText());
+        PhotoData photoData = photoDatas.get(position);
+        Glide.with(context).load(photoData.getPhotoPaths()).into(holder.imageView);
     }
 
     @Override
     public int getItemCount() {
-        return dataTests.size();
+        return photoDatas.size();
     }
 
     public static class PhotoViewHolder extends RecyclerView.ViewHolder {
-        private TextView textView;
+        private ImageView imageView;
+
 
         public PhotoViewHolder(View view) {
             super(view);
-            textView = (TextView) view.findViewById(R.id.tv_test);
+            imageView = view.findViewById(R.id.iv_item_photo);
         }
     }
 }
