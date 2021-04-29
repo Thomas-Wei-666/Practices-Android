@@ -4,6 +4,14 @@
     <item android:id="@+id/itm_import"
         android:icon="@mipmap/ic_import"
         android:title="@string/menu_import"
-        app:showAsAction="always"/>
+        app:showAsAction="ifRoom"/>
+    <item android:id="@+id/itm_save"
+        android:icon="@mipmap/ic_save"
+        android:title="保存状态"
+        app:showAsAction="ifRoom"/>
+    <item android:id="@+id/itm_delete"
+        android:icon="@mipmap/ic_delete"
+        android:title="删除"
+        app:showAsAction="ifRoom"/>
 
 </menu>

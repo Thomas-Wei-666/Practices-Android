@@ -1,7 +1,9 @@
 package com.example.photoalbumactivity;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -25,6 +27,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class MainActivity extends AppCompatActivity {
     private List<PhotoData> photoDataList = new ArrayList<>();
@@ -32,8 +36,11 @@ public class MainActivity extends AppCompatActivity {
     private List<String> photoPaths = new ArrayList<>();
     private PhotoRvAdapter photoRvAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private SharedPreferences sharedPreferences;
     private final int WRITE_EXTERNAL_STORAGE_Code = 0;
     private final int CHOOSE_PHOTO = 233;
+    private final String KEY_PhotoLocals = "photoLocals";
+    private int count = 0;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -46,8 +53,28 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.itm_import: {
                 startSystemPhotoAlbum();
+                break;
             }
-            break;
+            case R.id.itm_save: {
+                if (photoDataList.isEmpty()) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setCancelable(false);
+                    builder.setPositiveButton("确定", null);
+                    builder.setMessage("您还未导入任何图片");
+                    builder.setTitle("提示");
+                    builder.show();
+                } else {
+                    SharedPreferences.Editor editorLocation = sharedPreferences.edit();
+                    for (PhotoData e : photoDataList) {
+                        editorLocation.putString(KEY_PhotoLocals + count, e.getPhotoPaths());
+                        count++;
+                    }
+                    count = 0;
+                    editorLocation.apply();
+                    Toast.makeText(this, "保存成功", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
             default:
                 break;
         }
@@ -85,16 +112,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedPreferences = this.getSharedPreferences(KEY_PhotoLocals, MODE_PRIVATE);
+        if (!importSavedPhoto(sharedPreferences)) {
+            Log.i("importSaved", "数据库为空");
+        } else {
+            refreshData();
+        }
+
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.tb_toolbar);
         swipeRefreshLayout = findViewById(R.id.swipe_refresh);
         setSupportActionBar(toolbar);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshData();
-            }
-        });
+        swipeRefreshLayout.setOnRefreshListener(() -> refreshData());
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, permissions, WRITE_EXTERNAL_STORAGE_Code);
@@ -109,12 +139,25 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private boolean importSavedPhoto(SharedPreferences sharedPreferences) {
+        String e = "";
+        if (sharedPreferences.getString(KEY_PhotoLocals + count, null) == null) {
+            return false;
+        }
+        while ((e = sharedPreferences.getString(KEY_PhotoLocals + count, null)) != null) {
+            photoPaths.add(e);
+            count++;
+        }
+        count = 0;
+        return true;
+    }
+
     private void refreshData() {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(200);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -122,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         photoDataList.clear();
-                        for(int i = 0;i<photoPaths.size();i++){
+                        for (int i = 0; i < photoPaths.size(); i++) {
                             PhotoData photoData = new PhotoData(photoPaths.get(i));
                             photoDataList.add(photoData);
                         }
@@ -147,6 +190,7 @@ public class MainActivity extends AppCompatActivity {
                         String path;
                         path = getImagePath(selectedPhotos, projection);
                         photoPaths.add(path);
+                        refreshData();
                         Log.i("photopath", photoPaths.get(0));
                     } catch (Exception e) {
                         e.printStackTrace();

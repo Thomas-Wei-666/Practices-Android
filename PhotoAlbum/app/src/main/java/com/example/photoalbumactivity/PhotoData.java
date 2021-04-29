@@ -3,7 +3,7 @@ package com.example.photoalbumactivity;
 
 
 
-public class PhotoData {
+public class PhotoData implements Comparable<String>{
     private String photoPaths;
 
     public PhotoData(String photoPaths) {
@@ -12,5 +12,10 @@ public class PhotoData {
 
     public String getPhotoPaths() {
         return photoPaths;
+    }
+
+    @Override
+    public int compareTo(String o) {
+        return -1;
     }
 }
