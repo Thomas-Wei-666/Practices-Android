@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView photoRecyclerview = findViewById(R.id.rv_photo);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
-        photoRvAdapter = new PhotoRvAdapter(photoDataList);
+        photoRvAdapter = new PhotoRvAdapter(photoDataList, this, photoPaths, sharedPreferences);
         photoRecyclerview.setAdapter(photoRvAdapter);
         photoRecyclerview.setLayoutManager(gridLayoutManager);
 
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private void refreshData() {
+    public void refreshData() {
         new Thread(new Runnable() {
             @Override
             public void run() {

@@ -1,7 +1,10 @@
 package com.example.photoalbumactivity;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +20,16 @@ import java.util.List;
 
 public class PhotoRvAdapter extends RecyclerView.Adapter<PhotoRvAdapter.PhotoViewHolder> {
     private List<PhotoData> photoDatas;
+    private List<String> photoPaths;
     private Context context;
+    private Activity activity;
+    private SharedPreferences sharedPreferences;
 
-    public PhotoRvAdapter(List<PhotoData> photoPaths) {
-        this.photoDatas = photoPaths;
+    public PhotoRvAdapter(List<PhotoData> photoDatas, Activity activity, List<String> photoPaths, SharedPreferences sharedPreferences) {
+        this.photoDatas = photoDatas;
+        this.activity = activity;
+        this.photoPaths = photoPaths;
+        this.sharedPreferences = sharedPreferences;
     }
 
     @NonNull
@@ -30,6 +39,11 @@ public class PhotoRvAdapter extends RecyclerView.Adapter<PhotoRvAdapter.PhotoVie
         view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rv_photo_item, parent, false);
         PhotoViewHolder holder = new PhotoViewHolder(view);
         context = parent.getContext();
+        holder.imageView.setOnClickListener(v -> {
+            ScaleImageView scaleImageView = new ScaleImageView(activity,sharedPreferences,photoPaths);
+            scaleImageView.setFiles(holder.getAbsoluteAdapterPosition());
+            scaleImageView.create(holder.getAbsoluteAdapterPosition());
+        });
         return holder;
     }
 
