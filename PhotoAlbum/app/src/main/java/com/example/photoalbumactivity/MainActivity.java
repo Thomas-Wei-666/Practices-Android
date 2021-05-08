@@ -64,14 +64,7 @@ public class MainActivity extends AppCompatActivity {
                     builder.setTitle("提示");
                     builder.show();
                 } else {
-                    SharedPreferences.Editor editorLocation = sharedPreferences.edit();
-                    for (PhotoData e : photoDataList) {
-                        editorLocation.putString(KEY_PhotoLocals + count, e.getPhotoPaths());
-                        count++;
-                    }
-                    count = 0;
-                    editorLocation.apply();
-                    Toast.makeText(this, "保存成功", Toast.LENGTH_SHORT).show();
+                    savePhotoPaths();
                 }
                 break;
             }
@@ -79,6 +72,23 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        savePhotoPaths();
+    }
+
+    private void savePhotoPaths(){
+        SharedPreferences.Editor editorLocation = sharedPreferences.edit();
+        for (PhotoData e : photoDataList) {
+            editorLocation.putString(KEY_PhotoLocals + count, e.getPhotoPaths());
+            count++;
+        }
+        count = 0;
+        editorLocation.apply();
+        Toast.makeText(this, "保存成功", Toast.LENGTH_SHORT).show();
     }
 
     @Override
