@@ -2,6 +2,7 @@ package com.example.photoalbumactivity;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         savePhotoPaths();
     }
 
-    private void savePhotoPaths(){
+    private void savePhotoPaths() {
         SharedPreferences.Editor editorLocation = sharedPreferences.edit();
         for (PhotoData e : photoDataList) {
             editorLocation.putString(KEY_PhotoLocals + count, e.getPhotoPaths());
@@ -199,9 +200,11 @@ public class MainActivity extends AppCompatActivity {
                         String[] projection = {MediaStore.Images.Media.DATA};
                         String path;
                         path = getImagePath(selectedPhotos, projection);
+                        if(!isAlreadyImported(path)){
                         photoPaths.add(path);
+                        }
                         refreshData();
-                        Log.i("photopath", photoPaths.get(0));
+                        //Log.i("photopath", photoPaths.get(0));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -211,6 +214,23 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    private boolean isAlreadyImported(String path) {
+        int index = 0;
+        for(;index<photoPaths.size();index++){
+            if(path.equals(photoPaths.get(index))){
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("提示");
+                builder.setMessage("该照片已被导入");
+                builder.setCancelable(false);
+                builder.setPositiveButton("确定", (dialog, which) -> {
+                });
+                builder.show();
+                return true;
+            }
+        }
+        return false;
     }
 
     private String getImagePath(Uri selectedPhotos, String[] projection) {
