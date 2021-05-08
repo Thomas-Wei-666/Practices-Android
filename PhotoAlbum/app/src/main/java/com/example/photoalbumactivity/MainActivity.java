@@ -200,8 +200,8 @@ public class MainActivity extends AppCompatActivity {
                         String[] projection = {MediaStore.Images.Media.DATA};
                         String path;
                         path = getImagePath(selectedPhotos, projection);
-                        if(!isAlreadyImported(path)){
-                        photoPaths.add(path);
+                        if (!isAlreadyImported(path)) {
+                            photoPaths.add(path);
                         }
                         refreshData();
                         //Log.i("photopath", photoPaths.get(0));
@@ -218,8 +218,8 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isAlreadyImported(String path) {
         int index = 0;
-        for(;index<photoPaths.size();index++){
-            if(path.equals(photoPaths.get(index))){
+        for (; index < photoPaths.size(); index++) {
+            if (path.equals(photoPaths.get(index))) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("提示");
                 builder.setMessage("该照片已被导入");
